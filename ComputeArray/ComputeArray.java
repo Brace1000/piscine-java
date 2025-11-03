@@ -1,7 +1,7 @@
 public class ComputeArray {
     public static int[] computeArray(int[] array) {
         if (array == null) {
-            return new int[0];
+            return null;
         }
         
         int[] result = new int[array.length];
