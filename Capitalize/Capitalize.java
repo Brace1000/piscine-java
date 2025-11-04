@@ -2,7 +2,6 @@ import java.io.*;
 
 public class Capitalize {
     public static void capitalize(String[] args) throws IOException {
-        // Check if both input and output filenames are provided
         if (args == null || args.length < 2 || args[0] == null || args[1] == null) {
             return;
         }
@@ -11,49 +10,46 @@ public class Capitalize {
         String outputFile = args[1];
         
         File input = new File(inputFile);
-        
-        // Check if input file exists and is a file
         if (!input.exists() || !input.isFile()) {
             return;
         }
         
-        // Use try-with-resources to automatically close the streams
         try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
              BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
             
             String line;
             boolean firstLine = true;
             
-            // Read each line from input file
             while ((line = reader.readLine()) != null) {
+                // Don't add newline before the first line
                 if (!firstLine) {
-                    writer.newLine(); // Add newline between lines (but not at the end)
+                    writer.newLine();
                 }
                 
-                // Handle empty lines
+                // Process the current line
                 if (line.isEmpty()) {
                     writer.write("");
                 } else {
-                    // Find the first non-whitespace character
-                    int firstNonSpace = 0;
-                    while (firstNonSpace < line.length() && Character.isWhitespace(line.charAt(firstNonSpace))) {
-                        firstNonSpace++;
+                    // Convert the line to character array for precise control
+                    char[] chars = line.toCharArray();
+                    boolean capitalized = false;
+                    
+                    for (int i = 0; i < chars.length; i++) {
+                        // Find first alphabetic character and capitalize it
+                        if (!capitalized && Character.isLetter(chars[i])) {
+                            chars[i] = Character.toUpperCase(chars[i]);
+                            capitalized = true;
+                        }
                     }
                     
-                    if (firstNonSpace < line.length()) {
-                        // Preserve leading spaces and capitalize first non-space character
-                        String leadingSpaces = line.substring(0, firstNonSpace);
-                        char firstChar = Character.toUpperCase(line.charAt(firstNonSpace));
-                        String restOfLine = line.substring(firstNonSpace + 1);
-                        writer.write(leadingSpaces + firstChar + restOfLine);
-                    } else {
-                        // Line contains only whitespace
-                        writer.write(line);
-                    }
+                    writer.write(chars);
                 }
                 
                 firstLine = false;
             }
+            
+            // Ensure the output is flushed
+            writer.flush();
         }
     }
 }
