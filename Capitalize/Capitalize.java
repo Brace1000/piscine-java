@@ -1,40 +1,59 @@
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 
 public class Capitalize {
     public static void capitalize(String[] args) throws IOException {
-        // 1. Validate arguments
-        if (args == null || args.length != 2) {
-            // As per previous exercises, an invalid number of arguments usually results in an error
-            // or simply doing nothing, depending on exact test expectations.
-            // For file operations, it's safer to just return or throw a specific exception.
-            return; 
+        // Check if both input and output filenames are provided
+        if (args == null || args.length < 2 || args[0] == null || args[1] == null) {
+            return;
         }
-
-        String inputFilePath = args[0];
-        String outputFilePath = args[1];
-
-        // Use try-with-resources for both reader and writer to ensure they are closed automatically
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
-
+        
+        String inputFile = args[0];
+        String outputFile = args[1];
+        
+        File input = new File(inputFile);
+        
+        // Check if input file exists and is a file
+        if (!input.exists() || !input.isFile()) {
+            return;
+        }
+        
+        // Use try-with-resources to automatically close the streams
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile))) {
+            
             String line;
-            // 2. Read file line by line
+            boolean firstLine = true;
+            
+            // Read each line from input file
             while ((line = reader.readLine()) != null) {
-                // 3. Capitalize each line
-                // String.toUpperCase() converts all characters in the string to uppercase.
-                String capitalizedLine = line.toUpperCase();
+                if (!firstLine) {
+                    writer.newLine(); // Add newline between lines (but not at the end)
+                }
                 
-                // 4. Write capitalized line to output file
-                writer.write(capitalizedLine);
-                writer.newLine(); // Add a new line character after each line, similar to readLine() behavior
+                // Handle empty lines
+                if (line.isEmpty()) {
+                    writer.write("");
+                } else {
+                    // Find the first non-whitespace character
+                    int firstNonSpace = 0;
+                    while (firstNonSpace < line.length() && Character.isWhitespace(line.charAt(firstNonSpace))) {
+                        firstNonSpace++;
+                    }
+                    
+                    if (firstNonSpace < line.length()) {
+                        // Preserve leading spaces and capitalize first non-space character
+                        String leadingSpaces = line.substring(0, firstNonSpace);
+                        char firstChar = Character.toUpperCase(line.charAt(firstNonSpace));
+                        String restOfLine = line.substring(firstNonSpace + 1);
+                        writer.write(leadingSpaces + firstChar + restOfLine);
+                    } else {
+                        // Line contains only whitespace
+                        writer.write(line);
+                    }
+                }
+                
+                firstLine = false;
             }
         }
-        // No explicit catch here because the function signature "throws IOException"
-        // means any IOException will be thrown up to the caller (ExerciseRunner),
-        // which matches common patterns for these exercises.
     }
 }
