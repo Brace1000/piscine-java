@@ -36,9 +36,7 @@ public class Capitalize {
                     }
                 } else {
                     result.append(c);
-                    if (Character.isWhitespace(c)) {
-                        capitalizeNext = true;
-                    }
+                    capitalizeNext = true;
                 }
             }
             
