@@ -18,21 +18,11 @@ public class Capitalize {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // --- DEBUGGING OUTPUT START ---
-                System.err.println("Original Line: '" + line + "'"); // Using System.err so it stands out
-                // --- DEBUGGING OUTPUT END ---
-
-                String trimmedLine = line.trim();
-                System.err.println("Trimmed Line: '" + trimmedLine + "'"); // DEBUG
-
-                String singleSpacedLine = trimmedLine.replaceAll("\\s+", " ");
-                System.err.println("Single Spaced Line: '" + singleSpacedLine + "'"); // DEBUG
-
-                String capitalizedLine = singleSpacedLine.toUpperCase();
-                System.err.println("Final Capitalized Line: '" + capitalizedLine + "'"); // DEBUG
+                // This is the original simple capitalization logic
+                String capitalizedLine = line.toUpperCase();
                 
                 writer.write(capitalizedLine);
-                writer.newLine();
+                writer.newLine(); 
             }
         }
     }
