@@ -1,56 +1,49 @@
 import java.io.*;
-import java.nio.file.*;
 
 public class Capitalize {
     public static void capitalize(String[] args) throws IOException {
-        if (args == null || args.length < 2) {
+        if (args.length < 2) {
             return;
         }
         
         String inputFile = args[0];
         String outputFile = args[1];
         
-        try {
-            // Read all bytes to preserve exact formatting
-            byte[] bytes = Files.readAllBytes(Paths.get(inputFile));
-            String content = new String(bytes);
+        BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFile));
+        
+        String line;
+        boolean firstLine = true;
+        
+        while ((line = reader.readLine()) != null) {
+            if (!firstLine) {
+                writer.newLine();
+            }
+            firstLine = false;
             
-            // Split while keeping trailing empty lines
-            String[] lines = content.split("\n", -1);
             StringBuilder result = new StringBuilder();
+            boolean capitalizeNext = true;
             
-            for (int i = 0; i < lines.length; i++) {
-                if (i > 0) {
-                    result.append("\n");
-                }
+            for (int i = 0; i < line.length(); i++) {
+                char c = line.charAt(i);
                 
-                String line = lines[i];
-                if (!line.isEmpty()) {
-                    // Find first alphabetic character
-                    boolean capitalized = false;
-                    StringBuilder lineBuilder = new StringBuilder();
-                    
-                    for (char c : line.toCharArray()) {
-                        if (!capitalized && Character.isAlphabetic(c)) {
-                            lineBuilder.append(Character.toUpperCase(c));
-                            capitalized = true;
-                        } else {
-                            lineBuilder.append(c);
-                        }
-                    }
-                    result.append(lineBuilder);
+                if (Character.isWhitespace(c)) {
+                    result.append(c);
+                    capitalizeNext = true;
                 } else {
-                    result.append("");
+                    if (capitalizeNext && Character.isLetter(c)) {
+                        result.append(Character.toUpperCase(c));
+                        capitalizeNext = false;
+                    } else {
+                        result.append(Character.toLowerCase(c));
+                    }
                 }
             }
             
-            // Write with exact same line endings as input
-            Files.write(Paths.get(outputFile), result.toString().getBytes());
-            
-        } catch (NoSuchFileException e) {
-            return;
-        } catch (IOException e) {
-            return;
+            writer.write(result.toString());
         }
+        
+        reader.close();
+        writer.close();
     }
 }
