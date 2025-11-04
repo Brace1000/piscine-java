@@ -27,15 +27,17 @@ public class Capitalize {
             for (int i = 0; i < line.length(); i++) {
                 char c = line.charAt(i);
                 
-                if (Character.isWhitespace(c)) {
-                    result.append(c);
-                    capitalizeNext = true;
-                } else {
-                    if (capitalizeNext && Character.isLetter(c)) {
+                if (Character.isLetter(c)) {
+                    if (capitalizeNext) {
                         result.append(Character.toUpperCase(c));
                         capitalizeNext = false;
                     } else {
                         result.append(Character.toLowerCase(c));
+                    }
+                } else {
+                    result.append(c);
+                    if (Character.isWhitespace(c)) {
+                        capitalizeNext = true;
                     }
                 }
             }
