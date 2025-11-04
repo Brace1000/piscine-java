@@ -1,38 +1,39 @@
-import java.io.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Capitalize {
     public static void capitalize(String[] args) throws IOException {
-        if (args.length < 2) {
+        // 1. Validate arguments
+        if (args == null || args.length != 2) {
             return;
         }
-        
-        String inputFile = args[0];
-        String outputFile = args[1];
-        
-        // Read entire file content
-        String content = new String(Files.readAllBytes(Paths.get(inputFile)));
-        
-        StringBuilder result = new StringBuilder();
-        boolean capitalizeNext = true;
-        
-        for (int i = 0; i < content.length(); i++) {
-            char c = content.charAt(i);
-            
-            if (Character.isLetter(c)) {
-                if (capitalizeNext) {
-                    result.append(Character.toUpperCase(c));
-                    capitalizeNext = false;
-                } else {
-                    result.append(Character.toLowerCase(c));
-                }
-            } else {
-                result.append(c);
-                capitalizeNext = true;
+
+        String inputFilePath = args[0];
+        String outputFilePath = args[1];
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath))) {
+
+            String line;
+            while ((line = reader.readLine()) != null) {
+                // Modify this section to handle spaces
+                
+                // 1. Trim leading and trailing spaces
+                String trimmedLine = line.trim();
+                
+                // 2. Replace multiple spaces between words with a single space
+                //    Using a regex "\\s+" matches one or more whitespace characters
+                String singleSpacedLine = trimmedLine.replaceAll("\\s+", " ");
+                
+                // 3. Capitalize the entire line
+                String capitalizedLine = singleSpacedLine.toUpperCase();
+                
+                writer.write(capitalizedLine);
+                writer.newLine(); 
             }
         }
-        
-        // Write to output file
-        Files.write(Paths.get(outputFile), result.toString().getBytes());
     }
 }
