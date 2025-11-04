@@ -18,8 +18,8 @@ public class Capitalize {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // This is the original simple capitalization logic
-                String capitalizedLine = line.toUpperCase();
+                String trimmedLine = line.trim(); // Only trim leading/trailing
+                String capitalizedLine = trimmedLine.toUpperCase();
                 
                 writer.write(capitalizedLine);
                 writer.newLine(); 
