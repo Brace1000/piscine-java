@@ -6,7 +6,6 @@ import java.io.IOException;
 
 public class Capitalize {
     public static void capitalize(String[] args) throws IOException {
-        // 1. Validate arguments
         if (args == null || args.length != 2) {
             return;
         }
@@ -19,20 +18,21 @@ public class Capitalize {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                // Modify this section to handle spaces
-                
-                // 1. Trim leading and trailing spaces
+                // --- DEBUGGING OUTPUT START ---
+                System.err.println("Original Line: '" + line + "'"); // Using System.err so it stands out
+                // --- DEBUGGING OUTPUT END ---
+
                 String trimmedLine = line.trim();
-                
-                // 2. Replace multiple spaces between words with a single space
-                //    Using a regex "\\s+" matches one or more whitespace characters
+                System.err.println("Trimmed Line: '" + trimmedLine + "'"); // DEBUG
+
                 String singleSpacedLine = trimmedLine.replaceAll("\\s+", " ");
-                
-                // 3. Capitalize the entire line
+                System.err.println("Single Spaced Line: '" + singleSpacedLine + "'"); // DEBUG
+
                 String capitalizedLine = singleSpacedLine.toUpperCase();
+                System.err.println("Final Capitalized Line: '" + capitalizedLine + "'"); // DEBUG
                 
                 writer.write(capitalizedLine);
-                writer.newLine(); 
+                writer.newLine();
             }
         }
     }
