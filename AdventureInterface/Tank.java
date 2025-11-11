@@ -1,3 +1,3 @@
-public class Tank {
-    
+public interface Tank {
+    int getShield();
 }
