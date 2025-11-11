@@ -23,7 +23,8 @@ public abstract class Character {
         return currentHealth;
     }
     
-    public void setCurrentHealth(int health) {
+    // Changed from public to protected
+    protected void setCurrentHealth(int health) {
         this.currentHealth = health;
         if (this.currentHealth < 0) {
             this.currentHealth = 0;
